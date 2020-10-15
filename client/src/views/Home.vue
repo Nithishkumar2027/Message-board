@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="d-flex justify-content-between flex-wrap">
-      <h3 class="align-self-center">Full Stack Message Board</h3>
+      <h3 class="align-self-center">Kumar's Message Board</h3>
       <button
         type="button"
         class="btn btn-primary align-self-center"
