@@ -1,6 +1,7 @@
 const { func } = require('joi')
 const Joi = require('joi')
 const db = require('./connection')
+const moment = require('moment')
 
 const schema = Joi.object().keys({
     username: Joi.string().alphanum().required(),
@@ -22,7 +23,7 @@ const create = (message) => {
 
     const result = schema.validate(message)
     if(result.error == null) {
-        message.created = new Date()
+        message.created = moment().format("MMM Do YY"); 
         console.log(message)
         return messages.insert(message)
     } else {
