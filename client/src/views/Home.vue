@@ -34,6 +34,16 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
+
+            <!-- Error alert -->
+            <div v-if="error" class="alert alert-dismissible alert-warning">
+              <button type="button" class="close" data-dismiss="alert">
+                &times;
+              </button>
+              <h5 class="alert-heading">Error!</h5>
+              <p class="mb-0">{{ error }}</p>
+            </div>
+
             <div class="modal-body">
               <div>
                 <div class="form-group">
@@ -138,7 +148,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
 const API_URL = "http://localhost:3000/messages";
 export default {
   name: "Home",
@@ -150,6 +159,7 @@ export default {
       message: "",
       imageURL: "",
     },
+    error: "",
   }),
   computed: {
     reversedPost() {
@@ -172,7 +182,15 @@ export default {
       })
         .then((response) => response.json())
         .then((result) => {
-          this.messages.push(result);
+          if (result.details) {
+            const error = result.details
+              .map((detail) => detail.message)
+              .join(". ");
+            this.error = error;
+          } else {
+            this.error = "";
+            this.messages.push(result);
+          }
         });
     },
   },
@@ -183,8 +201,5 @@ export default {
 .userAvatar {
   height: 50px !important;
   width: 50px !important;
-}
-hr {
-  border-top: 1px solid white;
 }
 </style>
