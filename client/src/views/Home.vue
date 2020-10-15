@@ -1,8 +1,104 @@
 <template>
   <div class="home">
-    <h3>Full Stack Message Board</h3>
+    <div class="d-flex justify-content-between flex-wrap">
+      <h3 class="align-self-center">Full Stack Message Board</h3>
+      <button
+        type="button"
+        class="btn btn-primary align-self-center"
+        data-toggle="modal"
+        data-target="#formModal"
+      >
+        Create Post
+      </button>
+    </div>
 
-    <div class="row" v-for="message in messages" :key="message._id">
+    <div
+      class="modal fade"
+      id="formModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <form @submit.prevent="createPost">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Create Post</h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div>
+                <div class="form-group">
+                  <label for="username">Username</label>
+                  <input
+                    type="text"
+                    v-model="post.username"
+                    class="form-control"
+                    id="username"
+                    name="username"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="subject">Subject</label>
+                  <input
+                    type="text"
+                    v-model="post.subject"
+                    class="form-control"
+                    id="subject"
+                    placeholder="Enter a subject"
+                    name="subject"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="message">Message</label>
+                  <textarea
+                    v-model="post.message"
+                    class="form-control"
+                    name="message"
+                    id="message"
+                    rows="5"
+                    required
+                  ></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="imageURL">Image URL</label>
+                  <input
+                    type="url"
+                    v-model="post.imageURL"
+                    class="form-control"
+                    name="imageURL"
+                    id="imageURL"
+                    placeholder="Put an image URL"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="submit" class="btn btn-primary">Create Post</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" v-for="message in reversedPost" :key="message._id">
       <div class="col-md-3"></div>
       <div class="col-md-6">
         <div class="card mt-3 rounded postCard">
@@ -48,11 +144,37 @@ export default {
   name: "Home",
   data: () => ({
     messages: [],
+    post: {
+      username: "Anonymous",
+      subject: "",
+      message: "",
+      imageURL: "",
+    },
   }),
+  computed: {
+    reversedPost() {
+      return this.messages.slice().reverse();
+    },
+  },
   mounted() {
     fetch(API_URL)
       .then((response) => response.json())
       .then((result) => (this.messages = result));
+  },
+  methods: {
+    createPost() {
+      fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify(this.post),
+        headers: {
+          "content-type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((result) => {
+          this.messages.push(result);
+        });
+    },
   },
 };
 </script>
