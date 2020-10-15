@@ -109,8 +109,8 @@
     </div>
 
     <div class="row" v-for="message in reversedPost" :key="message._id">
-      <div class="col-md-3"></div>
-      <div class="col-md-6">
+      <div class=".d-sm-none .d-md-block col-md"></div>
+      <div class="col-md-7 col-sm-7">
         <div class="card mt-3 rounded postCard">
           <div class="card-body d-flex flex-row">
             <img
@@ -142,13 +142,13 @@
           </div>
         </div>
       </div>
-      <div class="col-md-3"></div>
+      <div class=".d-sm-none .d-md-block col-md"></div>
     </div>
   </div>
 </template>
 
 <script>
-const API_URL = "http://localhost:3000/messages";
+const API_URL = "api/messages";
 export default {
   name: "Home",
   data: () => ({
