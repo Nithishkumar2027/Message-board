@@ -19,16 +19,26 @@ app.get('/', (req, res)=> {
     })
 })
 
-app.get('/messages', (req, res) => {
+app.get('/api/messages', (req, res) => {
     messages.getAll().then(messages => res.json(messages))
 })
 
-app.post('/messages', (req, res) => {
+app.post('/api/messages', (req, res) => {
     console.log(req.body)
     messages.create(req.body)
         .then(message => res.json(message))
         .catch(err => res.status(500).json(err))
 })
+
+// Handle production
+if(process.env.NODE_ENV === 'production'){
+    app.use(express.static(__dirname + '/public/'))
+
+    // Handling SPA
+    app.get(/.*/, (req, res)=>{
+        res.sendFile(__dirname + '/public/index.html')
+    })
+}
 
 const port = process.env.PORT || 3000
 app.listen(port, () => console.log(`Server running at port ${port}`))
